@@ -1,0 +1,9 @@
+build/
+output/
+*.mod
+*.smod
+*.o
+*.obj
+*.exe
+*.log
+.DS_Store
