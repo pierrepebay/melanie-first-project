@@ -12,7 +12,7 @@ cmake --build --preset debug
 ctest --preset debug
 scripts/check-whitespace.sh
 scripts/check-branch-name.sh 42-add-diffusion-output
-scripts/check-commit-message.sh "#42: Add diffusion output"
+scripts/check-commit-message.sh "Add diffusion output #42"
 ```
 
 ## Commit Messages
@@ -20,10 +20,10 @@ scripts/check-commit-message.sh "#42: Add diffusion output"
 Use an issue-first subject:
 
 ```text
-#42: Add new output format
-#43: Fix empty case name validation
-#44: Test diffusion edge cells
-#45: Document CTest usage
+Add new output format #42
+Fix empty case name validation #43
+Test diffusion edge cells #44
+Document CTest usage #45
 ```
 
 Allowed actions are:
@@ -33,13 +33,13 @@ Add, Fix, Update, Remove, Refactor, Document, Test, Build, CI, Chore, Style,
 Rename, Improve, Revert
 ```
 
-The subject must start with the GitHub issue number, then a colon, then one of
-the allowed actions. Keep the summary short and imperative.
+The subject must start with one of the allowed actions and end with the GitHub
+issue number. Keep the summary short and imperative.
 
 Check a subject locally:
 
 ```sh
-scripts/check-commit-message.sh "#45: Document CTest usage"
+scripts/check-commit-message.sh "Document CTest usage #45"
 ```
 
 ## Branch Names

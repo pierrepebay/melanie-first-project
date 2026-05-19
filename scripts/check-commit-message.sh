@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-pattern='^#[0-9]+: (Add|Fix|Update|Remove|Refactor|Document|Test|Build|CI|Chore|Style|Rename|Improve|Revert) .{1,72}$'
+pattern='^(Add|Fix|Update|Remove|Refactor|Document|Test|Build|CI|Chore|Style|Rename|Improve|Revert) .{1,72} #[0-9]+$'
 
 check_subject() {
   local subject="$1"
@@ -12,8 +12,8 @@ check_subject() {
 
   if [[ ! "$subject" =~ $pattern ]]; then
     echo "Bad commit message: $subject"
-    echo "Use: #issue_number: Action short imperative summary"
-    echo "Example: #42: Fix unstable time step validation"
+    echo "Use: Action short imperative summary #issue_number"
+    echo "Example: Fix unstable time step validation #42"
     return 1
   fi
 }

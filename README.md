@@ -53,7 +53,7 @@ Run the local quality checks:
 
 ```sh
 scripts/check-whitespace.sh
-scripts/check-commit-message.sh "#42: Add diffusion playground"
+scripts/check-commit-message.sh "Add diffusion playground #42"
 scripts/check-branch-name.sh 42-add-diffusion-playground
 ```
 

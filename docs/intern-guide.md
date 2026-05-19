@@ -96,9 +96,9 @@ GitHub Actions workflows live in `.github/workflows/`.
 The quality workflow expects commit messages like:
 
 ```text
-#42: Add diffusion playground
-#43: Fix unstable time step validation
-#44: Document ParaView workflow
+Add diffusion playground #42
+Fix unstable time step validation #43
+Document ParaView workflow #44
 ```
 
 Pull request branches should look like:
