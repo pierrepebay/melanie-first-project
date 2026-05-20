@@ -61,6 +61,10 @@ if(BUILD_TESTING)
   target_link_libraries(test_field PRIVATE playground_core)
   playground_enable_warnings(test_field)
 
+  add_executable(test_comparison tests/regression/test_comparison.f90)
+  target_link_libraries(test_comparison PRIVATE playground_core)
+  playground_enable_warnings(test_comparison)
+
   add_test(
     NAME config-reader
     COMMAND test_config "${CMAKE_SOURCE_DIR}/examples/default/simulation.ini"
@@ -75,6 +79,23 @@ if(BUILD_TESTING)
       "${CMAKE_SOURCE_DIR}/examples/default/simulation.ini"
       "${CMAKE_BINARY_DIR}/playground-output"
   )
+
+  add_test(
+    NAME create_comparison_files
+    COMMAND
+      diffusion_playground
+      "${CMAKE_SOURCE_DIR}/tests/regression/config/simulation.ini"
+      "${CMAKE_SOURCE_DIR}/output"
+  )
+
+  add_test(
+    NAME comparison
+    COMMAND
+      test_comparison
+      "${CMAKE_SOURCE_DIR}/tests/regression/expected/reference.vtk"
+      "${CMAKE_SOURCE_DIR}/output/melanie_demo_step_0120.vtk"
+  )
+
   set_tests_properties(
     example-run
     PROPERTIES
