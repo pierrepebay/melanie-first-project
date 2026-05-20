@@ -74,6 +74,7 @@ contains
     if (cfg%source_strength <= 0.0_real64) then
       error stop "source_strength must be positive"
     end if
+    if (cfg%t_amb <= 0.0_real64) error stop "t_amb must be positive"
 
     stability = cfg%alpha * cfg%dt / (cfg%dx * cfg%dx)
     if (stability > 0.25_real64) then

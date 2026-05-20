@@ -21,6 +21,7 @@ program test_field
   cfg%alpha = 0.20_real64
   cfg%dt = 0.20_real64
   cfg%dx = 1.0_real64
+  cfg%t_amb = 25.0_real64
   call validate_config(cfg)
 
   allocate(field(cfg%nx, cfg%ny))
