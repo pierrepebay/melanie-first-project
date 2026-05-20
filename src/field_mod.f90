@@ -21,11 +21,17 @@ contains
     real(real64) :: radius_squared
 
     do j = 1, cfg%ny
+      do i = 1, cfg%nx
+        field(i, j) = cfg%t_amb
+      end do
+    end do
+
+    do j = 1, cfg%ny
       y = real(j - 1, real64) / real(cfg%ny - 1, real64)
       do i = 1, cfg%nx
         x = real(i - 1, real64) / real(cfg%nx - 1, real64)
         radius_squared = (x - 0.5_real64)**2 + (y - 0.5_real64)**2
-        field(i, j) = cfg%source_strength * exp(-30.0_real64 * radius_squared)
+        field(i, j) = field(i, j) + cfg%source_strength * exp(-30.0_real64 * radius_squared)
       end do
     end do
   end subroutine initialize_field

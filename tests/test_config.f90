@@ -17,10 +17,12 @@ program test_config
   call assert_equal_text(trim(cfg%case_name), "melanie_demo", "case_name")
   call assert_equal_int(cfg%nx, 25, "nx")
   call assert_equal_int(cfg%ny, 17, "ny")
-  call assert_equal_int(cfg%steps, 24, "steps")
-  call assert_close(cfg%alpha, 0.20_real64, "alpha")
-  call assert_close(cfg%dt, 0.20_real64, "dt")
+  call assert_equal_int(cfg%steps, 120, "steps")
+  call assert_close(cfg%alpha, 0.10_real64, "alpha")
+  call assert_close(cfg%dt, 1.0_real64, "dt")
   call assert_close(cfg%dx, 1.0_real64, "dx")
+  call assert_close(cfg%t_amb, 25.0_real64, "t_amb")
+
 contains
 
   subroutine assert_equal_text(actual, expected, name)

@@ -14,6 +14,7 @@ module config_mod
     real(real64) :: dt = 0.20_real64
     real(real64) :: dx = 1.0_real64
     real(real64) :: source_strength = 1.0_real64
+    real(real64) :: t_amb = 0.0_real64
   end type simulation_config
 
   public :: read_config
@@ -73,6 +74,7 @@ contains
     if (cfg%source_strength <= 0.0_real64) then
       error stop "source_strength must be positive"
     end if
+    if (cfg%t_amb <= 0.0_real64) error stop "t_amb must be positive"
 
     stability = cfg%alpha * cfg%dt / (cfg%dx * cfg%dx)
     if (stability > 0.25_real64) then
@@ -106,6 +108,8 @@ contains
       read(value, *) cfg%dx
     case ("source_strength")
       read(value, *) cfg%source_strength
+    case ("t_amb")
+      read(value, *) cfg%t_amb
     case default
       error stop "Unknown configuration key"
     end select
