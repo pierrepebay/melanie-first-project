@@ -14,6 +14,7 @@ module config_mod
     real(real64) :: dt = 0.20_real64
     real(real64) :: dx = 1.0_real64
     real(real64) :: source_strength = 1.0_real64
+    real(real64) :: t_amb = 0.0_real64
   end type simulation_config
 
   public :: read_config
@@ -106,6 +107,8 @@ contains
       read(value, *) cfg%dx
     case ("source_strength")
       read(value, *) cfg%source_strength
+    case ("t_amb")
+      read(value, *) cfg%t_amb
     case default
       error stop "Unknown configuration key"
     end select

@@ -22,7 +22,7 @@ contains
 
     do j = 1, cfg%ny
       do i = 1, cfg%nx
-        field(i, j) = 25._real64
+        field(i, j) = cfg%t_amb
       end do
     end do
 
