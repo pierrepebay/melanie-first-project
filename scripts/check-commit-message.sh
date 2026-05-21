@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-pattern='^(Add|Fix|Update|Remove|Refactor|Document|Test|Build|CI|Chore|Style|Rename|Improve|Revert) .{1,72} #[0-9]+$'
+pattern='^(Add|Fix|Update|Remove|Refactor|Document|Test|Build|CI|Chore|Style|Rename|Improve|Revert|Change) .{1,72} #[0-9]+$'
 
 check_subject() {
   local subject="$1"
