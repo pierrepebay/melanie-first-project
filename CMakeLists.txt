@@ -92,8 +92,8 @@ if(BUILD_TESTING)
     NAME comparison
     COMMAND
       test_comparison
-      "${CMAKE_SOURCE_DIR}/tests/regression/expected/reference.vtk"
-      "${CMAKE_SOURCE_DIR}/output/melanie_demo_step_0120.vtk"
+      "${CMAKE_SOURCE_DIR}/tests/regression/expected/reference.vti"
+      "${CMAKE_SOURCE_DIR}/output/vti_files/melanie_demo_step_0120.vti"
   )
 
   set_tests_properties(
