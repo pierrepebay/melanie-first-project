@@ -3,7 +3,7 @@ program test_comparison
   use config_mod, only: simulation_config, read_config, validate_config
   use field_mod, only: diffuse_step, initialize_field
   use path_mod, only: join_path
-  use vtk_writer_mod, only: write_vtk_structured_points
+  use vtk_writer_mod, only: write_vti_structured_points
   implicit none
 
   integer :: argc, i

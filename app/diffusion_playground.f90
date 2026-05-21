@@ -4,7 +4,7 @@ program diffusion_playground
   use field_mod, only: diffuse_step, field_stats, initialize_field, write_csv_field
   use logger_mod, only: run_logger
   use path_mod, only: ensure_directory, join_path
-  use vtk_writer_mod, only: write_vtk_structured_points, write_pvd_first_lines, write_pvd_line, write_pvd_end_lines, write_vti_structured_points
+  use vtk_writer_mod, only: write_pvd_first_lines, write_pvd_line, write_pvd_end_lines, write_vti_structured_points
   implicit none
 
   type(simulation_config) :: cfg
@@ -90,18 +90,16 @@ contains
     character(len=512) :: csv_path
     character(len=256) :: message
     character(len=128) :: stem
-    character(len=512) :: vtk_path, vti_path
+    character(len=512) :: vti_path
     real(real64) :: maximum
     real(real64) :: mean
     real(real64) :: minimum
 
     stem = trim(cfg%case_name) // "_step_" // step_label(step)
     csv_path = join_path(trim(cfg%output_dir), trim(stem) // ".csv")
-    vtk_path = join_path(trim(cfg%output_dir), trim(stem) // ".vtk")
     vti_path = join_path(trim(cfg%output_dir) // "/vti_files", trim(stem) // ".vti")
 
     call write_csv_field(trim(csv_path), field, cfg)
-    call write_vtk_structured_points(trim(vtk_path), field, cfg)
     call write_vti_structured_points(trim(vti_path), field, cfg)
     call write_pvd_line(trim(pvd_path), trim(stem) // ".vti", step_label(step))
     call field_stats(field, minimum, maximum, mean)
@@ -110,7 +108,7 @@ contains
       "Step ", step, ": min=", minimum, ", max=", maximum, ", mean=", mean
     call log%info(trim(message))
     call log%info("Wrote CSV: " // trim(csv_path))
-    call log%info("Wrote VTK: " // trim(vtk_path))
+    call log%info("Wrote VTK: " // trim(vti_path))
   end subroutine write_snapshot
 
   subroutine write_summary(field, cfg, log)
