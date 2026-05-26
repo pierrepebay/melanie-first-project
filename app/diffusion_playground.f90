@@ -4,14 +4,14 @@ program diffusion_playground
   use field_mod, only: diffuse_step, field_stats, initialize_field, write_csv_field
   use logger_mod, only: run_logger
   use path_mod, only: ensure_directory, join_path
-  use vtk_writer_mod, only: write_vtk_structured_points
+  use vtk_writer_mod, only: write_pvd_first_lines, write_pvd_line, write_pvd_end_lines, write_vti_structured_points
   implicit none
 
   type(simulation_config) :: cfg
   type(run_logger) :: log
   character(len=256) :: config_path
   character(len=256) :: output_override
-  character(len=512) :: log_path
+  character(len=512) :: log_path, pvd_path
   integer :: argc
   integer :: step
   real(real64), allocatable :: field(:, :)
@@ -36,22 +36,27 @@ program diffusion_playground
   call log%open(trim(log_path))
   call log_configuration(log, cfg, trim(config_path))
 
+  call ensure_directory(trim(cfg%output_dir) // "/vti_files")
+  pvd_path = join_path(trim(cfg%output_dir) // "/vti_files", trim(cfg%case_name) // ".pvd")
+  call write_pvd_first_lines(trim(pvd_path))
+
   allocate(field(cfg%nx, cfg%ny))
   allocate(next_field(cfg%nx, cfg%ny))
 
   call initialize_field(field, cfg)
-  call write_snapshot(0, field, cfg, log)
+  call write_snapshot(0, field, cfg, log, pvd_path)
 
   do step = 1, cfg%steps
     call diffuse_step(field, next_field, cfg)
     field = next_field
 
     if (mod(step, cfg%output_every) == 0 .or. step == cfg%steps) then
-      call write_snapshot(step, field, cfg, log)
+      call write_snapshot(step, field, cfg, log, pvd_path)
     end if
   end do
 
   call write_summary(field, cfg, log)
+  call write_pvd_end_lines(trim(pvd_path))
   call log%info("Run finished successfully")
   call log%close()
 
@@ -76,32 +81,34 @@ contains
     call log%info(trim(message))
   end subroutine log_configuration
 
-  subroutine write_snapshot(step, field, cfg, log)
+  subroutine write_snapshot(step, field, cfg, log, pvd_path)
     integer, intent(in) :: step
     real(real64), intent(in) :: field(:, :)
     type(simulation_config), intent(in) :: cfg
     type(run_logger), intent(inout) :: log
+    character(len=512), intent(in) :: pvd_path
     character(len=512) :: csv_path
     character(len=256) :: message
     character(len=128) :: stem
-    character(len=512) :: vtk_path
+    character(len=512) :: vti_path
     real(real64) :: maximum
     real(real64) :: mean
     real(real64) :: minimum
 
     stem = trim(cfg%case_name) // "_step_" // step_label(step)
     csv_path = join_path(trim(cfg%output_dir), trim(stem) // ".csv")
-    vtk_path = join_path(trim(cfg%output_dir), trim(stem) // ".vtk")
+    vti_path = join_path(trim(cfg%output_dir) // "/vti_files", trim(stem) // ".vti")
 
     call write_csv_field(trim(csv_path), field, cfg)
-    call write_vtk_structured_points(trim(vtk_path), field, cfg)
+    call write_vti_structured_points(trim(vti_path), field, cfg)
+    call write_pvd_line(trim(pvd_path), trim(stem) // ".vti", step_label(step))
     call field_stats(field, minimum, maximum, mean)
 
     write(message, "(A,I0,A,ES10.3,A,ES10.3,A,ES10.3)") &
       "Step ", step, ": min=", minimum, ", max=", maximum, ", mean=", mean
     call log%info(trim(message))
     call log%info("Wrote CSV: " // trim(csv_path))
-    call log%info("Wrote VTK: " // trim(vtk_path))
+    call log%info("Wrote VTK: " // trim(vti_path))
   end subroutine write_snapshot
 
   subroutine write_summary(field, cfg, log)

@@ -3,7 +3,7 @@ program test_comparison
   use config_mod, only: simulation_config, read_config, validate_config
   use field_mod, only: diffuse_step, initialize_field
   use path_mod, only: join_path
-  use vtk_writer_mod, only: write_vtk_structured_points
+  use vtk_writer_mod, only: write_vti_structured_points
   implicit none
 
   integer :: argc, i
@@ -17,7 +17,7 @@ program test_comparison
 
   argc = command_argument_count()
   if (argc < 1) then
-    write(*, "(A)") "Usage: test_comparison <reference.vtk> <fichier.vtk>"
+    write(*, "(A)") "Usage: test_comparison <reference.vti> <fichier.vti>"
     stop 2
   end if
 
@@ -35,14 +35,14 @@ program test_comparison
     error stop "Could not open compared file"
   end if
 
-  do i = 1, 10
+  do i = 1, 6
     read(unit_1, "(A)", iostat=ios_1) line_1
     if (ios_1 /= 0) exit
     read(unit_2, "(A)", iostat=ios_2) line_2
     if (ios_2 /= 0) exit
   end do
 
-  do
+  do i = 7, 431
     read(unit_1, "(A)", iostat=ios_1) line_1
     if (ios_1 /= 0) exit
     read(unit_2, "(A)", iostat=ios_2) line_2
