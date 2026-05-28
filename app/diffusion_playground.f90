@@ -1,11 +1,11 @@
 program diffusion_playground
+  use OMP_LIB
   use iso_fortran_env, only: real64
   use config_mod, only: read_config, simulation_config, validate_config
   use field_mod, only: diffuse_step, field_stats, initialize_field, write_csv_field
   use logger_mod, only: run_logger
   use path_mod, only: ensure_directory, join_path
   use vtk_writer_mod, only: write_pvd_first_lines, write_pvd_line, write_pvd_end_lines, write_vti_structured_points
-  implicit none
 
   type(simulation_config) :: cfg
   type(run_logger) :: log
@@ -16,6 +16,9 @@ program diffusion_playground
   integer :: step
   real(real64), allocatable :: field(:, :)
   real(real64), allocatable :: next_field(:, :)
+  real(real64) :: start, end, time, start_2, end_2, time_2
+
+  start = omp_get_wtime()
 
   argc = command_argument_count()
   if (argc < 1) then
@@ -46,19 +49,30 @@ program diffusion_playground
   call initialize_field(field, cfg)
   call write_snapshot(0, field, cfg, log, pvd_path)
 
+  start_2 = omp_get_wtime()
+
   do step = 1, cfg%steps
     call diffuse_step(field, next_field, cfg)
     field = next_field
 
-    if (mod(step, cfg%output_every) == 0 .or. step == cfg%steps) then
-      call write_snapshot(step, field, cfg, log, pvd_path)
-    end if
+    !if (mod(step, cfg%output_every) == 0 .or. step == cfg%steps) then
+    !  call write_snapshot(step, field, cfg, log, pvd_path)
+    !end if
   end do
+
+  end_2 = omp_get_wtime()
+  time_2 = end_2 - start_2
+  write(*, *) "Boucle sur diffuse_step : ", time_2
 
   call write_summary(field, cfg, log)
   call write_pvd_end_lines(trim(pvd_path))
   call log%info("Run finished successfully")
   call log%close()
+
+  end = omp_get_wtime()
+  time = end-start
+
+  write(*, *) "time = ", time
 
 contains
 
@@ -108,7 +122,7 @@ contains
       "Step ", step, ": min=", minimum, ", max=", maximum, ", mean=", mean
     call log%info(trim(message))
     call log%info("Wrote CSV: " // trim(csv_path))
-    call log%info("Wrote VTK: " // trim(vti_path))
+    call log%info("Wrote VTI: " // trim(vti_path))
   end subroutine write_snapshot
 
   subroutine write_summary(field, cfg, log)

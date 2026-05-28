@@ -53,7 +53,6 @@ contains
     write(unit, "(A)") '<?xml version="1.0"?>'
     write(unit, "(A)") '<VTKFile type="Collection" version="0.1" byte_order="LittleEndian" compressor="vtkZLibDataCompressor">'
     write(unit, "(A)") '  <Collection>'
-    write(*, "(A)") "Hello Wolrd"
 
     close(unit)
   end subroutine write_pvd_first_lines
