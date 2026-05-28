@@ -67,6 +67,8 @@ After a run, inspect `build/debug/playground-output/`.
 - `melanie_demo_step_0000.vtk`: VTK snapshot for ParaView.
 - Later `step_XXXX` files: snapshots as the simulation evolves.
 
+Now uses `.pvd` files in the output.
+
 Open one of the `.vtk` files in ParaView, click **Apply**, and color by the
 `temperature` scalar.
 
