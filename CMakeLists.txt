@@ -34,6 +34,8 @@ function(playground_enable_warnings target)
   endif()
 endfunction()
 
+find_package(OpenMP REQUIRED COMPONENTS Fortran)
+
 add_library(
   playground_core
   src/config_mod.f90
@@ -48,9 +50,17 @@ target_include_directories(
 )
 playground_enable_warnings(playground_core)
 
+if(OpenMP_Fortran_FOUND)
+  target_link_libraries(playground_core PUBLIC OpenMP::OpenMP_Fortran)
+else()
+  message(FATAL_ERROR "OpenMP was not found")
+endif()
+
 add_executable(diffusion_playground app/diffusion_playground.f90)
 target_link_libraries(diffusion_playground PRIVATE playground_core)
 playground_enable_warnings(diffusion_playground)
+
+
 
 if(BUILD_TESTING)
   add_executable(test_config tests/test_config.f90)
