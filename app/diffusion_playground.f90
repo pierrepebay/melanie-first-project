@@ -55,9 +55,9 @@ program diffusion_playground
     call diffuse_step(field, next_field, cfg)
     field = next_field
 
-    !if (mod(step, cfg%output_every) == 0 .or. step == cfg%steps) then
-    !  call write_snapshot(step, field, cfg, log, pvd_path)
-    !end if
+    if (mod(step, cfg%output_every) == 0 .or. step == cfg%steps) then
+      call write_snapshot(step, field, cfg, log, pvd_path)
+    end if
   end do
 
   end_2 = omp_get_wtime()
