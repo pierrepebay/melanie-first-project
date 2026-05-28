@@ -15,6 +15,14 @@ module config_mod
     real(real64) :: dx = 1.0_real64
     real(real64) :: source_strength = 1.0_real64
     real(real64) :: t_amb = 0.0_real64
+    character(len=1) :: top = "N"
+    character(len=1) :: bottom = "N"
+    character(len=1) :: left = "N"
+    character(len=1) :: right = "N"
+    real(real64) :: v_top = 0.0_real64
+    real(real64) :: v_bottom = 0.0_real64
+    real(real64) :: v_left = 0.0_real64
+    real(real64) :: v_right = 0.0_real64
   end type simulation_config
 
   public :: read_config
@@ -110,6 +118,22 @@ contains
       read(value, *) cfg%source_strength
     case ("t_amb")
       read(value, *) cfg%t_amb
+    case ("top")
+      cfg%top = value
+    case ("bottom")
+      cfg%bottom = value
+    case ("left")
+      cfg%left = value
+    case ("right")
+      cfg%right = value
+    case ("v_top")
+      read(value, *) cfg%v_top
+    case ("v_bottom")
+      read(value, *) cfg%v_bottom
+    case ("v_left")
+      read(value, *) cfg%v_left
+    case ("v_right")
+      read(value, *) cfg%v_right
     case default
       error stop "Unknown configuration key"
     end select

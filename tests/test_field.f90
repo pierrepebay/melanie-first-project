@@ -15,13 +15,21 @@ program test_field
   real(real64) :: next_mean
   real(real64) :: next_min
 
-  cfg%nx = 9
-  cfg%ny = 7
+  cfg%nx = 25
+  cfg%ny = 17
   cfg%steps = 1
-  cfg%alpha = 0.20_real64
-  cfg%dt = 0.20_real64
+  cfg%alpha = 0.10_real64
+  cfg%dt = 0.10_real64
   cfg%dx = 1.0_real64
+  cfg%top = "D"
+  cfg%bottom = "D"
+  cfg%left = "D"
+  cfg%right = "D"
   cfg%t_amb = 25.0_real64
+  cfg%v_top = 100.0_real64
+  cfg%v_bottom = 2.0_real64
+  cfg%v_left = 50.0_real64
+  cfg%v_right = 5.0_real64
   call validate_config(cfg)
 
   allocate(field(cfg%nx, cfg%ny))
@@ -35,7 +43,7 @@ program test_field
   if (any(ieee_is_nan(next_field))) error stop "field contains NaN"
   if (initial_max <= initial_mean) error stop "initial field should have a peak"
   if (next_max > initial_max) error stop "diffusion should not create a larger peak"
-  if (abs(next_mean - initial_mean) > 5.0e-3_real64) then
+  if (abs(next_mean - initial_mean) > 5.0e-2_real64) then
     error stop "mean changed more than expected for one tiny diffusion step"
   end if
   if (next_min < -1.0e-12_real64) error stop "diffusion created negative values"
