@@ -112,7 +112,7 @@ if(BUILD_TESTING)
   set_tests_properties(
     example-run
     PROPERTIES
-      PASS_REGULAR_EXPRESSION "Wrote VTK"
+      PASS_REGULAR_EXPRESSION "Wrote VTI"
   )
 endif()
 
