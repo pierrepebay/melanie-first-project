@@ -24,20 +24,28 @@ contains
 
     start = omp_get_wtime()
 
-    do j = 1, cfg%ny
-      do i = 1, cfg%nx
-        field(i, j) = cfg%t_amb
-      end do
-    end do
+    !$omp parallel default(none) shared(field) firstprivate(cfg) private(i, j, x, y, radius_squared)
 
-    do j = 1, cfg%ny
-      do i = 1, cfg%nx
-        y = real(j - 1, real64) / real(cfg%ny - 1, real64)
-        x = real(i - 1, real64) / real(cfg%nx - 1, real64)
-        radius_squared = (x - 0.5_real64)**2 + (y - 0.5_real64)**2
-        field(i, j) = field(i, j) + cfg%source_strength * exp(-30.0_real64 * radius_squared)
+      !$omp do collapse(2) schedule(static)
+      do j = 1, cfg%ny
+        do i = 1, cfg%nx
+          field(i, j) = cfg%t_amb
+        end do
       end do
-    end do
+      !$omp end do
+
+      !$omp do collapse(2) schedule(static)
+      do j = 1, cfg%ny
+        do i = 1, cfg%nx
+          y = real(j - 1, real64) / real(cfg%ny - 1, real64)
+          x = real(i - 1, real64) / real(cfg%nx - 1, real64)
+          radius_squared = (x - 0.5_real64)**2 + (y - 0.5_real64)**2
+          field(i, j) = field(i, j) + cfg%source_strength * exp(-30.0_real64 * radius_squared)
+        end do
+      end do
+      !$omp end do
+
+    !$omp end parallel
 
       end = omp_get_wtime()
       time = end - start
