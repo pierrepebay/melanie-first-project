@@ -34,6 +34,22 @@ contains
         field(i, j) = field(i, j) + cfg%source_strength * exp(-30.0_real64 * radius_squared)
       end do
     end do
+
+    ! Top and bottom boundaries
+    do i = 1, cfg%nx
+      field(i, cfg%ny) = cfg%v_top
+      if (cfg%top == "N") field(i, cfg%ny) = cfg%v_top * cfg%dx + field(i, cfg%ny - 1)
+      field(i, 1) = cfg%v_bottom
+      if (cfg%bottom == "N") field(i, 1) = cfg%v_bottom * cfg%dx + field(i, 2)
+    end do
+
+    ! Left and right boundaries
+    do j = 1, cfg%ny
+      field(1, j) = cfg%v_left
+      if (cfg%left == "N") field(1, j) = cfg%v_left * cfg%dx + field(2, j)
+      field(cfg%nx, j) = cfg%v_right
+      if (cfg%right == "N") field(cfg%nx, j) = cfg%v_right * cfg%dx + field(cfg%nx - 1, j)
+    end do
   end subroutine initialize_field
 
   subroutine diffuse_step(field, next_field, cfg)
@@ -55,6 +71,22 @@ contains
           4.0_real64 * field(i, j) &
         )
       end do
+    end do
+
+    ! Top and bottom boundaries
+    do i = 1, cfg%nx
+      next_field(i, cfg%ny) = cfg%v_top
+      if (cfg%top == "N") next_field(i, cfg%ny) = cfg%v_top * cfg%dx + next_field(i, cfg%ny - 1)
+      next_field(i, 1) = cfg%v_bottom
+      if (cfg%bottom == "N") next_field(i, 1) = cfg%v_bottom * cfg%dx + next_field(i, 2)
+    end do
+
+    ! Left and right boundaries
+    do j = 1, cfg%ny
+      next_field(1, j) = cfg%v_left
+      if (cfg%left == "N") next_field(1, j) = cfg%v_left * cfg%dx + next_field(2, j)
+      next_field(cfg%nx, j) = cfg%v_right
+      if (cfg%right == "N") next_field(cfg%nx, j) = cfg%v_right * cfg%dx + next_field(cfg%nx - 1, j)
     end do
   end subroutine diffuse_step
 

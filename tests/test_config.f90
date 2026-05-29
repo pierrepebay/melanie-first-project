@@ -21,7 +21,10 @@ program test_config
   call assert_close(cfg%alpha, 0.10_real64, "alpha")
   call assert_close(cfg%dt, 1.0_real64, "dt")
   call assert_close(cfg%dx, 1.0_real64, "dx")
-  call assert_close(cfg%t_amb, 25.0_real64, "t_amb")
+  call assert_equal_text(trim(cfg%top), "D", "top")
+  call assert_equal_text(trim(cfg%bottom), "D", "bottom")
+  call assert_equal_text(trim(cfg%left), "D", "left")
+  call assert_equal_text(trim(cfg%right), "D", "right")
 
 contains
 

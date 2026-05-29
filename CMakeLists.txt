@@ -67,7 +67,7 @@ if(BUILD_TESTING)
 
   add_test(
     NAME config-reader
-    COMMAND test_config "${CMAKE_SOURCE_DIR}/examples/default/simulation.ini"
+    COMMAND test_config "${CMAKE_SOURCE_DIR}/tests/regression/config/simulation.ini"
   )
 
   add_test(NAME field-update COMMAND test_field)
